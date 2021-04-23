@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use App\Models\employee;
 use Illuminate\Database\Eloquent\Factories\Factory;
-
+use Illuminate\Support\Str;
 class EmployeeFactory extends Factory
 {
     /**
@@ -19,10 +19,16 @@ class EmployeeFactory extends Factory
      *
      * @return array
      */
-    public function definition()
-    {
+    public function definition(){
+        $faker = Faker\Factory::create();
         return [
             //
+            
+                'full_name'=>$this->faker->full_name,
+                'password'=>$this->faker->password,
+                'salary'=>$this->faker->salary,
+                'isAdmin'=>$this->regexify (0|1),
+                'remember_token' => Str::random(10),
         ];
     }
 }

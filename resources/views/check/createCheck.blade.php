@@ -18,18 +18,17 @@
 <div align="center">
     <h1>create check</h1>
 <form action="{{url('check')}}" method="post">
-    {{csrf_field()}}
+        {{csrf_field()}}
     <label for="entry">entry time:</label>
     <input type="time" id="entry" name="entry">
-    <input type="text" id="employee_id" name="employee_id" value="{{$one_employee->id}}">
-    <input type="number" id="isAdmin" name="isAdmin" value="{{$one_employee->id}}"> 
+    <input type="text" id="employee_id" name="employee_id" placeholder="Enter youre ID">
     <input type="submit" value="save"><br>
 </form>
    <h1><strong>Hint</strong></h1><br>
    ==> to entry Leaving feld you must do up date from check table
-    <form action="{{url('employee',$one_employee->id)}}" method="get">
+   <form action="{{url('check')}}" method="get">
         {{csrf_field()}}
-        <button type="submit" >show check table</button>
+        <button type="submit" >show the time table</button>
         </form>
 
 </div>

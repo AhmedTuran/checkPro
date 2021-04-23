@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\check;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class CheckFactory extends Factory
 {
@@ -21,8 +22,13 @@ class CheckFactory extends Factory
      */
     public function definition()
     {
+        $faker = Faker\Factory::create();
         return [
             //
+            'entry'=>now(),
+            'Leaving'=>time::random(),
+            'employee_id'=>randomDigitNot(0),
+            'remember_token' => Str::random(10),
         ];
     }
 }

@@ -16,6 +16,14 @@
 <body>
 
 <div align="center">
+@if ($errors -> any())
+    <h2><strong>Error</strong></h2>
+    <ul>
+    @foreach($errors -> all() as $error)
+        <li>{{$error}}</li>
+        </ul>
+    @endforeach
+    @endif
     <h1>edit employee</h1>
 <form action="{{url('employee/'.$one_employee->id)}}" method="post">
 <input type="hidden" name="id" value="{{ $one_employee->id }}" />

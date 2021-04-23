@@ -19,7 +19,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach($allcheck as $check)
+        @foreach($allCheck as $check)
         <tr>
             <th>{{$check->entry}}</th>
             <th>{{$check->Leaving}}</th>
@@ -28,13 +28,10 @@
                 <form action="{{url('check'.$check->id.'edit')}}" method="get">
                     {{csrf_field()}}
                     <button type="submit" >up date</button>
-                </form>
-                <form action="{{url('check',$check->id)}}" method="post">
-                {{csrf_field()}}
-                    {{method_field('DELETE')}}
-                    <button type="submit" >delete</button>
-                </form>
-                
+                </form><br>
+                <form action="{{url('check/create')}}" method="get">
+                 {{csrf_field()}}
+        <button type="submit" >creat new check</button> </form>
             </td>
         </tr>
         @endforeach

@@ -6,3 +6,5 @@ Route::resources([
     'employee' => employeeController::class,
     'check' => checkController::class,
 ]);
+Route::get('login', [employeeController::class , 'getLogin']);
+Route::post('login',[employeeController::class , 'postLogin']);

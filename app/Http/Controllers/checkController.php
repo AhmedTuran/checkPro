@@ -16,8 +16,8 @@ class checkController extends Controller
     public function index()
     {
         //
-        $Check = DB::table('Checks')->get();
-        return view('check\showCheck') ->with('allCheck',$Check);
+        $check = DB::table('Checks')->get();
+        return view('check\showCheck') ->with('allCheck',$check);
     }
 
     /**
@@ -28,7 +28,8 @@ class checkController extends Controller
     public function create()
     {
         //
-        return view('check\createCheck')-> with('one_employee',$employee);
+       
+        return view('check\createCheck');
     }
 
     /**
@@ -37,26 +38,20 @@ class checkController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request , $id)
+    public function store(Request $request )
     {
         //
+        
         $request->validate([
             'entry'=>'required',
-            'Leaving'=>'required',
-            
+            'Leaving'=>'required',  
         ]);
         $check = new check();
         $check-> entry =$request -> get( 'entry');
-        $check-> emloyee_id ->get('emloyee_id');
+        $check-> emloyee_id =$request ->get('emloyee_id');
         $check-> save();
         return redirect()->back();
-        $id= $request->all();
-        if ($request->isAdmin==1){
-        return redirect()->to('employee');
-        }
-        elseif ($request->isAdmin==0){
-        return redirect()->to('employee/',$one_employee->id);
-        }
+        return redirect()->to('check');
     }
 
     /**
@@ -68,6 +63,11 @@ class checkController extends Controller
     public function show($id)
     {
         //
+       
+        return view('check\showCheck', 
+        [
+            'check' => check::findOrFail($id)
+        ]);
     }
 
     /**
@@ -80,7 +80,7 @@ class checkController extends Controller
     {
         //
         $check = check::find($id);
-        return view('check\editcheck')-> with('one_check',$check)-> with('one_employee',$employee) ;
+        return view('check\editcheck')-> with('one_check',$check);
         /*$check = check::fined($id);
         $check-> entry =$request -> get( 'entry');
         $check-> Leaving =$request -> get( 'Leaving');
@@ -101,18 +101,24 @@ class checkController extends Controller
         //
        /* $check = check::fined($id);
         return redirect()->to('check')->with('one_check',$check);*/
+        $employee = DB::table('employees')->get();
         $request->validate([
             'entry'=>'required',
-            'Leaving'=>'required',
-            'employee_id'=>'required',
+            'Leaving'=>'required',  
         ]);
-        $id-> $request->all();
-        if ($request->isAdmin==1){
+        /*$check = new check();
+        $check-> entry =$request -> get( 'entry');
+        $check-> emloyee_id ->get('emloyee_id');
+        $check-> save();
+        return redirect()->to('check');
+        */
+        DB::table('employees')->where('id',$request->id)->update([
+            'entry'=>$request->entry,
+            'emloyee_id'=>$request->emloyee_id,
+            'Leaving'=>$request->Leaving,
+            'isAdmin'=>$request->isAdmin,
+        ]);
         return redirect()->to('employee');
-        }
-        elseif ($request->isAdmin==0){
-        return redirect()->to('employee',$one_employee->id);
-        }
     }
 
     /**

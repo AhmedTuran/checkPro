@@ -14,6 +14,16 @@
         }</style>
 </head>
 <body>
+<div float="right">
+    @if ($errors -> any())
+    <h2><strong>Error</strong></h2>
+    <ul>
+    @foreach($errors -> all() as $error)
+        <li>{{$error}}</li>
+        </ul>
+    @endforeach
+    @endif 
+    </div>
 <div align="center">
     <h1>create employee</h1>
 <form action="{{url('employee')}}" method="post">

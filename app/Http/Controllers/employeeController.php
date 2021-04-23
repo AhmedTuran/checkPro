@@ -6,19 +6,44 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\employee;
 use App\Models\check;
+use Illuminate\Support\Facades\Validator;
+
 class employeeController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getLogin(){return view ('login');}
+    public function postLogin(Request $request){
+      dd($request);
+        /*  if(auth()->attempt(['full_name'->$request->get('name'),'password'->$request->get('password')])){
+            return redirect()->to('employee');
+        }else{return redirect()->back()->with('please','check youre user name or password is correct and try it again');}
+    */}
+     public function index()
     {
         //
+       if ('isAdmin' == 1) {  
         $employee = DB::table('employees')->get();
        return view('employee\showEmployee' )->with('allEmployees',$employee);
-      
+        }
+        elseif('isAdmin' == 0){
+            $employee = employee::find($id);
+            return view('employee\showEmployee' )->with('allEmployees',$employee);
+         } 
+         else{ 
+     //dd('the roue is done') ;   
+     //$employee = employee::find($id);
+         $employee = DB::table('employees')->get();   
+         //$employee->checks()->where('active', $id)->get();
+      // $employee = emloyee::with ('check')->get();
+        dd($employee);
+         //return view('employee\showEmployee' )->with('allEmployees',$employee);
+        }  
+    
     }
 
     /**
@@ -38,23 +63,31 @@ class employeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request )
     {
         //
        
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'full_name'=>'required',
+            'full_name'=>'string',
             'salary'=>'required',
+            'salary'=>'integer',
             'password'=>'required',
-            'isAdmin'=>'required',
+            'isAdmin'=>'required', 
+            
         ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
         $employee = new employee;
         $employee-> full_name =$request -> get( 'full_name');
         $employee-> salary =$request -> get( 'salary');
         $employee-> password =$request -> get( 'password');
         $employee-> isAdmin =$request -> get( 'isAdmin');
         $employee-> save();
-        return redirect()->back();
+        return redirect()->to('employee');
       
         
     }
@@ -68,9 +101,13 @@ class employeeController extends Controller
     public function show($id)
     {
         //
-        $employee = employee::find($id);
-        return view('employee\showEmployee' )->with('allEmployees',$employee);
-
+        $employee = DB::table('employees')->where('id', $id)->first();
+        return view('employee\showOneEmployee' )->with('thisEmployee',$employee);
+        /*return view('employee\showEmployee', 
+        [
+            'employee' => employee::findOrFail($id)
+        ]);*/
+        
     }
 
     /**
@@ -116,12 +153,20 @@ class employeeController extends Controller
         /*$employee = employee::find($id);
         return view('employee/editEmployee')-> with('one_employee',$employee) ;
         */
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'full_name'=>'required',
+            'full_name'=>'string',
             'salary'=>'required',
+            'salary'=>'integer',
             'password'=>'required',
             'isAdmin'=>'required',
+            
         ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
         DB::table('employees')->where('id',$request->id)->update([
             'full_name'=>$request->full_name,
             'salary'=>$request->salary,
@@ -151,4 +196,5 @@ class employeeController extends Controller
         $employee->delete('employee');
         return redirect()->to('employee');*/
     }
+   
 }
